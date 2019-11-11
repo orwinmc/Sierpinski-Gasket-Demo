@@ -12,7 +12,7 @@ function add_point() {
     let g = Math.floor(Math.random()*256);
     let b = Math.floor(Math.random()*256);
     let hexcolor = rgb_to_hex([r, g, b]);
-    points.push({x:Math.random(), y:Math.random(), color:hexcolor});
+    points.push({x:Math.random()*2-1, y:Math.random()*2-1, color:hexcolor});
   //}
 
   draw();
@@ -39,9 +39,8 @@ function draw() {
   ctx.fill();
 
   for (var i = 0; i<points.length; i++) {
-    console.log(points[i]);
     ctx.beginPath();
-    ctx.arc(points[i].x*1600+100, points[i].y*1600+100, 30, 0, 2 * Math.PI);
+    ctx.arc(points[i].x*800+800, points[i].y*800+800, 30, 0, 2 * Math.PI);
 
     // Coloring
     ctx.fillStyle = points[i].color;
@@ -50,4 +49,30 @@ function draw() {
     ctx.strokeStyle = "#000000";
     ctx.stroke();
   }
+}
+
+function sg_iterate() {
+  fixed_points = [
+    {x:Math.cos((Math.PI*3)/6), y:Math.sin((Math.PI*3)/6)},
+    {x:Math.cos((Math.PI*7)/6), y:Math.sin((Math.PI*7)/6)},
+    {x:Math.cos((Math.PI*11)/6), y:Math.sin((Math.PI*11)/6)}
+  ];
+
+  new_points = []
+
+  for (let i = 0; i<points.length; i++) {
+    let p = points[i];
+    for (let j = 0; j<fixed_points.length; j++) {
+      fp = fixed_points[j];
+      let new_p = {
+        x:0.5*(p.x-fp.x)+fp.x,
+        y:0.5*(p.y-fp.y)+fp.y,
+        color:p.color
+      };
+      new_points.push(new_p);
+    }
+  }
+
+  points = new_points;
+  draw();
 }
